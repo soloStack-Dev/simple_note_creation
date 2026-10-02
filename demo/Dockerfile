@@ -33,7 +33,14 @@ EXPOSE 8080
 
 ENV JAVA_OPTS="-XX:MaxRAMPercentage=75"
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+# Boot is slow: Hibernate init plus a cold classpath on a cold WSL2 VM has been
+# observed to take well over a minute, and a suspended/resumed VM has pushed it past
+# thirty. The old --start-period=40s --retries=3 gave up at ~130s, so the container sat
+# permanently "unhealthy" while nothing was listening on 8080 - which looks exactly like a
+# broken page, and restart: unless-stopped will NOT rescue an unhealthy container, only a
+# stopped one. start-interval probes often while it is still starting (cheap), then the
+# interval settles once running.
+HEALTHCHECK --start-interval=10s --start-period=240s --interval=30s --timeout=5s --retries=5 \
   CMD ["sh", "-c", "curl -fsS http://localhost:8080/actuator/health || exit 1"]
 
 ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar"]
