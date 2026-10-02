@@ -1,0 +1,9 @@
+<!--
+  Response to a successful create. The grid is swapped out-of-band into the page
+  behind the modal, and the marker left in the response body is what app.js watches
+  for so it can close the modal.
+-->
+<div th:fragment="created(notes)">
+  <div th:insert="~{fragments/notes-grid :: grid(${notes}, true)}"></div>
+  <span class="d-none" data-note-created="true"></span>
+</div>

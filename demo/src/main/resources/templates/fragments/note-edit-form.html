@@ -1,0 +1,40 @@
+<!-- Inline edit. Replaces its own card in place; on 422 it re-renders with errors. -->
+<form th:fragment="form(note)" class="card mn-note h-100" th:id="'note-' + ${note.id}"
+  th:attr="data-category=${note.category.name()}"
+  th:action="@{'/notes/' + ${note.id}}" method="post"
+  th:attr="hx-post=@{'/notes/' + ${note.id}}" hx-target="this" hx-swap="outerHTML"
+  hx-disabled-elt="find button[type=submit]">
+
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+  <div class="card-body d-flex flex-column">
+    <div th:if="${!#lists.isEmpty(errors)}" class="alert alert-danger py-2" role="alert">
+      <ul class="mb-0 ps-3 small">
+        <li th:each="error : ${errors}" th:text="${error}">error</li>
+      </ul>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label" for="editCategory">Category</label>
+      <select class="form-select form-select-sm" id="editCategory" name="category">
+        <option th:each="option : ${categories}" th:value="${option.name()}"
+          th:text="${option.label}" th:selected="${option == selectedCategory}">Category</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="form-label" for="editMessage">Message</label>
+      <textarea class="form-control form-control-sm" id="editMessage" name="message" rows="6"
+        th:text="${message}"></textarea>
+    </div>
+  </div>
+
+  <div class="card-footer bg-transparent border-0 d-flex gap-2 mt-auto">
+    <button class="btn btn-primary btn-sm" type="submit">Save</button>
+    <button class="btn btn-outline-secondary btn-sm" type="button"
+      th:attr="hx-get=@{/fragments/notes-grid}" hx-target="#notesGrid" hx-swap="outerHTML">
+      Cancel
+    </button>
+  </div>
+
+</form>

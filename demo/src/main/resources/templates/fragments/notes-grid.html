@@ -1,0 +1,58 @@
+<!-- The whole grid, plus the stat strip and the empty state.
+     oob=true marks it for an out-of-band swap, which is how a create inside the
+     modal updates the grid behind it without the caller having to target it. -->
+<!-- The strip renders at zero too, not just when notes exist: hiding it until
+     the first write would make the page jump down as soon as a note is added,
+     which is exactly the moment the reader is looking at the grid. -->
+<div th:fragment="grid(notes, oob)" id="notesGrid" th:attr="hx-swap-oob=${oob} ? 'true' : null">
+
+  <div class="row g-3 mb-4" aria-label="Notes by category">
+    <div class="col-12 col-sm-4">
+      <div class="mn-tile mn-tile--routine">
+        <div class="card-body py-3 d-flex align-items-center gap-3">
+          <span class="mn-tile__dot" aria-hidden="true"></span>
+          <span class="mn-tile__label">Daily routine</span>
+          <span class="mn-tile__value ms-auto" th:text="${noteCounts['DAILY_ROUTINE'] ?: 0}">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-4">
+      <div class="mn-tile mn-tile--memory">
+        <div class="card-body py-3 d-flex align-items-center gap-3">
+          <span class="mn-tile__dot" aria-hidden="true"></span>
+          <span class="mn-tile__label">Memories</span>
+          <span class="mn-tile__value ms-auto" th:text="${noteCounts['MEMORIES'] ?: 0}">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-4">
+      <div class="mn-tile mn-tile--other">
+        <div class="card-body py-3 d-flex align-items-center gap-3">
+          <span class="mn-tile__dot" aria-hidden="true"></span>
+          <span class="mn-tile__label">Something else</span>
+          <span class="mn-tile__value ms-auto" th:text="${noteCounts['SOMETHING_ELSE'] ?: 0}">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${#lists.isEmpty(notes)}" class="mn-empty text-center py-5 px-3">
+    <h2 class="h5 mb-2">No notes are available</h2>
+    <p class="text-body-secondary mb-4">Everything you write will show up here.</p>
+    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#noteModal">
+      Add your first note
+    </button>
+  </div>
+
+  <div th:unless="${#lists.isEmpty(notes)}" class="row g-4">
+    <div th:each="note : ${notes}" class="col-12 col-md-6 col-xl-4">
+      <!-- h-100 on the wrapper as well as the card: the row stretches its columns,
+           so the card can fill the row and the cards line up whatever their
+           message length. -->
+      <div class="h-100" th:insert="~{fragments/note-card :: card(${note})}"></div>
+    </div>
+  </div>
+
+</div>

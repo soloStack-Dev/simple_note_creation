@@ -1,0 +1,38 @@
+<!-- Add-note form. Works as a normal POST when htmx is unavailable: the controller
+     redirects non-htmx requests back to /notes. -->
+<!-- hx-post goes through th:attr, not th:hx-post: Thymeleaf only evaluates @{...}
+     inside attributes its own dialect knows, so a th:hx-post would ship the literal
+     string and htmx would request a URL containing "@{/notes}". -->
+<form th:fragment="form" th:action="@{/notes}" method="post" id="noteForm"
+  th:attr="hx-post=@{/notes}"
+  hx-target="#noteModalBody" hx-swap="innerHTML" hx-disabled-elt="find button[type=submit]">
+
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+  <div th:if="${!#lists.isEmpty(errors)}" class="alert alert-danger" role="alert">
+    <ul class="mb-0 ps-3">
+      <li th:each="error : ${errors}" th:text="${error}">error</li>
+    </ul>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label" for="noteCategory">Category</label>
+    <select class="form-select" id="noteCategory" name="category">
+      <option th:each="option : ${categories}" th:value="${option.name()}"
+        th:text="${option.label}" th:selected="${option == selectedCategory}">Category</option>
+    </select>
+  </div>
+
+  <div class="mb-4">
+    <label class="form-label" for="noteMessage">Message</label>
+    <textarea class="form-control" id="noteMessage" name="message" rows="8"
+      placeholder="Write what happened, what you remember, or what you are thinking about."
+      th:text="${message}"></textarea>
+  </div>
+
+  <div class="d-flex gap-2">
+    <button class="btn btn-primary" type="submit">Create</button>
+    <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+  </div>
+
+</form>

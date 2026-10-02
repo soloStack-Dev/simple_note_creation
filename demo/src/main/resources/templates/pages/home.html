@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head(${pageTitle})}">
+  <title>Memory Notes</title>
+</head>
+
+<body class="mn-shell">
+
+<nav th:replace="~{fragments/layout :: navbar('home')}"></nav>
+<div th:replace="~{fragments/flash :: messages}"></div>
+
+<main class="py-5">
+  <div class="container d-flex flex-column gap-5">
+
+    <!-- Hero: the headline, its supporting line, and the two ways in. -->
+    <section class="mn-hero text-center">
+      <p class="mn-hero__eyebrow mb-4">
+        <span aria-hidden="true">&#9679;</span>
+        A notebook for your own story
+      </p>
+
+      <h1 class="mn-display mb-3">Describe your life on&nbsp;memories</h1>
+
+      <p class="mn-hero__lead mx-auto mb-4">
+        Write down the small parts of your day, the moments you want to keep, and the ideas that
+        are still forming.
+      </p>
+
+      <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+        <a class="btn btn-primary" th:href="@{/notes}">Open your notes</a>
+        <a class="btn btn-outline-secondary" th:href="@{/about}">Why we built this</a>
+      </div>
+    </section>
+
+    <!-- Three points, so a first-time visitor learns what the site is for
+         without scrolling. -->
+    <section class="row g-4 mt-0">
+      <div class="col-12 col-md-4">
+        <div class="mn-tile">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3">
+              <span class="mn-tile__icon" aria-hidden="true">&#9998;</span>
+              <h2 class="h6 mb-0">Write it down</h2>
+            </div>
+            <p class="text-body-secondary small mb-0 mt-3">
+              Whatever your daily life looks like, describe it here in as many words as it deserves.
+              Most of these moments arrive once and are gone by the evening.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4">
+        <div class="mn-tile">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3">
+              <span class="mn-tile__icon" aria-hidden="true">&#9635;</span>
+              <h2 class="h6 mb-0">Keep it in one grid</h2>
+            </div>
+            <p class="text-body-secondary small mb-0 mt-3">
+              Pick a category, write what happened, and come back to it whenever you want to
+              remember. Everything you write stays in a single place.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4">
+        <div class="mn-tile">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3">
+              <span class="mn-tile__icon" aria-hidden="true">&#128274;</span>
+              <h2 class="h6 mb-0">Yours alone</h2>
+            </div>
+            <p class="text-body-secondary small mb-0 mt-3">
+              Your account is protected by a token-based sign-in, and only you can edit or delete
+              the notes you wrote.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+# Checking the UI find out some issues
+
+- when user before authenticate to touch the /about,/notes redirect to go authentication page [logIn,SignUp]
+- after authentication the profile was shown successfully but when user click the profile to shown the panel of profile information to review in the profile shown [username,email,bio with input feild along with save button and edit button the bio suggest least 150 chracter allowed to write] and i already told the note creation process and ui process in project-info.md file so analyze because when user click the new note create button it not worked so fix it

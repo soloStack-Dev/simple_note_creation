@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head(${pageTitle})}">
+  <title>Note</title>
+</head>
+
+<body class="mn-shell">
+
+<nav th:replace="~{fragments/layout :: navbar('note')}"></nav>
+<div th:replace="~{fragments/flash :: messages}"></div>
+
+<main class="py-4 py-lg-5">
+  <div class="container">
+
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+      <div>
+        <h1 class="h3 mb-1">Your notes</h1>
+        <p class="text-body-secondary mb-0">
+          <span th:if="${noteTotal != null and noteTotal == 1}">1 note</span>
+          <span th:unless="${noteTotal != null and noteTotal == 1}">
+            <span th:text="${noteTotal} ?: 0">0</span> notes
+          </span>
+          &mdash; every memory, routine and idea you have written down.
+        </p>
+      </div>
+
+      <!-- Left corner: opens the add-note panel. -->
+      <button class="btn btn-primary align-self-start align-self-sm-auto flex-shrink-0" type="button"
+        data-bs-toggle="modal" data-bs-target="#noteModal"
+        th:attr="hx-get=@{/fragments/note-form}" hx-target="#noteModalBody" hx-swap="innerHTML">
+        Add New Note
+      </button>
+    </div>
+
+    <!-- Replaced out-of-band by htmx after a create or a delete. -->
+    <div th:replace="~{fragments/notes-grid :: grid(${notes}, false)}"></div>
+
+  </div>
+</main>
+
+<!-- Add-note panel. The form is rendered server side, so it also works as a plain
+     POST when htmx is unavailable.
+     th:insert, not th:replace: the hx-target of both the button above and the form
+     is #noteModalBody, so this div has to survive the render. -->
+<div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="noteModalLabel">Add New Note</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="noteModalBody" data-note-form-url="/fragments/note-form"
+        th:insert="~{fragments/note-form :: form}">
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+
+</body>
+
+</html>

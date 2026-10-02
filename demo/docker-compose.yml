@@ -1,0 +1,21 @@
+services:
+  memory-notes:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: memory-notes:latest
+    container_name: memory-notes
+    ports:
+      - "8080:8080"
+    environment:
+      # H2 is in-memory, so the data lives only as long as the container. Uncomment
+      # to keep it across restarts (see the DATABASE_URL note in application.properties).
+      # DATABASE_URL: jdbc:h2:file:/data/NoteDB;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE
+      TZ: UTC
+    volumes:
+      # Mounted so the optional file-based H2 URL above can persist data.
+      - notedb:/data
+    restart: unless-stopped
+
+volumes:
+  notedb:

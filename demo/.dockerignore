@@ -1,0 +1,21 @@
+# Build output and local scratch files never belong in the image.
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.vscode/
+.settings/
+.classpath
+.project
+bin/
+*.launch
+
+# Agent reference docs and requirement notes: inputs, not runtime.
+*-project-reference.md
+project-Info.md
+HELP.md
+
+# Stray logs from local runs
+*.out
+*.err
+*.log

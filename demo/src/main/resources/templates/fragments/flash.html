@@ -1,0 +1,16 @@
+<!-- One-shot messages left by a redirect. Rendered full-bleed so they sit tight
+     under the navbar, with the page content below them rather than beside. -->
+<div th:fragment="messages">
+  <div class="container mt-3">
+    <div th:if="${justSignedUp}" class="alert alert-success mb-0" role="status">
+      Your account is ready. Welcome aboard.
+    </div>
+    <div th:if="${profileSaved}" class="alert alert-success mb-0" role="status">
+      Profile saved.
+    </div>
+    <div th:if="${profileError}" class="alert alert-danger mb-0" role="alert"
+      th:text="${profileError}">Profile error.</div>
+    <div th:if="${errorMessage}" class="alert alert-danger mb-0" role="alert"
+      th:text="${errorMessage}">Something went wrong.</div>
+  </div>
+</div>

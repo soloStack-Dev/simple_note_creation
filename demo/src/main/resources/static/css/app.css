@@ -1,0 +1,594 @@
+/*
+ * Memory Notes - project CSS.
+ *
+ * Layered deliberately, in this order:
+ *
+ *   1. Design tokens        - every colour, radius, shadow and space scale the app uses.
+ *   2. Bootstrap bridge     - hand our tokens to Bootstrap through its own CSS variables,
+ *                             so Bootstrap components restyle without being forked.
+ *   3. Components           - the small number of things utilities cannot express.
+ *
+ * The Bootstrap reference is the authority on the split: layout, spacing, display and
+ * alignment are done with Bootstrap utilities in the templates, and this file only holds
+ * project-specific visuals. That is also why there are no `.d-flex`-alikes here.
+ */
+
+/* ==========================================================================
+   1. Design tokens
+   ========================================================================== */
+
+:root {
+  /* Colour - warm paper and ink, rather than Bootstrap's default cold grey. */
+  --mn-bg: #f7f5f2;
+  --mn-surface: #fffdfb;
+  --mn-surface-sunken: #f2efea;
+  --mn-ink: #1c1917;
+  --mn-ink-muted: #6b625c;
+  --mn-border: #e4ddd4;
+  --mn-border-strong: #d3c9bd;
+
+  /* Accent. Amber reads as "kept paper" and is far enough from Bootstrap blue
+     that the app looks designed rather than unstyled. */
+  --mn-accent: #b45309;
+  --mn-accent-hover: #92400e;
+  --mn-accent-active: #78350f;
+  --mn-accent-ink: #ffffff;
+  --mn-accent-soft: #fdf3e6;
+
+  /* One hue per note category, so a card is identifiable at a glance. */
+  --mn-cat-routine: #0e7490;
+  --mn-cat-routine-soft: #ecfeff;
+  --mn-cat-memory: #b45309;
+  --mn-cat-memory-soft: #fdf3e6;
+  --mn-cat-other: #6d28d9;
+  --mn-cat-other-soft: #f5f3ff;
+
+  /* Radius. Slightly rounder than Bootstrap's defaults, and only three steps. */
+  --mn-radius-sm: 0.5rem;
+  --mn-radius-md: 0.875rem;
+  --mn-radius-lg: 1.5rem;
+
+  /* Shadow. Warm-tinted so it does not read as grey dirt over paper. */
+  --mn-shadow-sm: 0 1px 2px rgb(28 25 23 / 0.06), 0 1px 3px rgb(28 25 23 / 0.04);
+  --mn-shadow-md: 0 4px 12px rgb(28 25 23 / 0.08), 0 12px 32px rgb(28 25 23 / 0.06);
+  --mn-shadow-lg: 0 12px 40px rgb(28 25 23 / 0.14);
+
+  /* Motion. One duration, one easing, so nothing feels like a different app. */
+  --mn-transition: 160ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+/* Dark mode reuses the same token names, so no component rule below changes.
+   Selected by an attribute rather than the media query alone: the navbar toggle
+   sets it, and the choice has to survive a reload. */
+[data-bs-theme="dark"] {
+  --mn-bg: #171412;
+  --mn-surface: #211d1a;
+  --mn-surface-sunken: #1a1714;
+  --mn-ink: #f4f1ed;
+  --mn-ink-muted: #a79e96;
+  --mn-border: #362f2a;
+  --mn-border-strong: #4a4139;
+
+  --mn-accent: #f59e0b;
+  --mn-accent-hover: #fbbf24;
+  --mn-accent-active: #fcd34d;
+  /* Ink on amber, not white: white on #f59e0b is under 3:1. */
+  --mn-accent-ink: #1c1917;
+  --mn-accent-soft: #2b2119;
+
+  --mn-cat-routine: #67e8f9;
+  --mn-cat-routine-soft: #16303a;
+  --mn-cat-memory: #fbbf24;
+  --mn-cat-memory-soft: #2b2119;
+  --mn-cat-other: #c4b5fd;
+  --mn-cat-other-soft: #251f3a;
+
+  --mn-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --mn-shadow-md: 0 4px 12px rgb(0 0 0 / 0.45);
+  --mn-shadow-lg: 0 12px 40px rgb(0 0 0 / 0.55);
+}
+
+/* ==========================================================================
+   2. Bootstrap bridge
+   ========================================================================== */
+
+/* Bootstrap derives badges, links, focus rings, selected states and validation
+   colours from these four variables. Setting them once restyles all of those
+   without touching a single Bootstrap class. */
+:root,
+[data-bs-theme="dark"] {
+  --bs-body-bg: var(--mn-bg);
+  --bs-body-bg-rgb: 247, 245, 242;
+  --bs-body-color: var(--mn-ink);
+  --bs-body-color-rgb: 28, 25, 23;
+  --bs-emphasis-color: var(--mn-ink);
+
+  --bs-secondary-color: var(--mn-ink-muted);
+  --bs-secondary-bg: var(--mn-surface-sunken);
+  --bs-tertiary-bg: var(--mn-surface);
+  --bs-tertiary-color: var(--mn-ink-muted);
+
+  --bs-border-color: var(--mn-border);
+  --bs-border-color-translucent: var(--mn-border);
+
+  --bs-primary: var(--mn-accent);
+  --bs-primary-rgb: 180, 83, 9;
+  --bs-primary-text-emphasis: var(--mn-accent-active);
+  --bs-primary-bg-subtle: var(--mn-accent-soft);
+  --bs-primary-border-subtle: var(--mn-accent-soft);
+
+  --bs-link-color: var(--mn-accent);
+  --bs-link-color-rgb: 180, 83, 9;
+  --bs-link-hover-color: var(--mn-accent-hover);
+  --bs-link-hover-color-rgb: 146, 64, 14;
+
+  --bs-border-radius: var(--mn-radius-sm);
+  --bs-border-radius-sm: var(--mn-radius-sm);
+  --bs-border-radius-lg: var(--mn-radius-md);
+  --bs-border-radius-xl: var(--mn-radius-lg);
+
+  --bs-focus-ring-color: color-mix(in srgb, var(--mn-accent) 30%, transparent);
+  --bs-link-decoration-color: color-mix(in srgb, var(--mn-accent) 45%, transparent);
+}
+
+[data-bs-theme="dark"] {
+  --bs-primary-rgb: 245, 158, 11;
+  --bs-link-color-rgb: 245, 158, 11;
+  --bs-link-hover-color-rgb: 251, 191, 36;
+  --bs-heading-color: var(--mn-ink);
+}
+
+/* .btn-primary hard-codes its own ramp, so it has to be pointed at the tokens too. */
+.btn-primary {
+  --bs-btn-bg: var(--mn-accent);
+  --bs-btn-border-color: var(--mn-accent);
+  --bs-btn-color: var(--mn-accent-ink);
+  --bs-btn-hover-bg: var(--mn-accent-hover);
+  --bs-btn-hover-border-color: var(--mn-accent-hover);
+  --bs-btn-hover-color: var(--mn-accent-ink);
+  --bs-btn-active-bg: var(--mn-accent-active);
+  --bs-btn-active-border-color: var(--mn-accent-active);
+  --bs-btn-active-color: var(--mn-accent-ink);
+  --bs-btn-disabled-bg: var(--mn-accent);
+  --bs-btn-disabled-border-color: var(--mn-accent);
+  --bs-btn-disabled-color: var(--mn-accent-ink);
+  --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+}
+
+/* Bootstrap's own light/dark variables, kept in step with the tokens above. */
+[data-bs-theme="dark"] {
+  --bs-body-bg-rgb: 23, 20, 18;
+  --bs-body-color-rgb: 244, 241, 237;
+}
+
+/* ==========================================================================
+   3. Components
+   ========================================================================== */
+
+body {
+  /* System stack: no webfont request, and it already matches the OS the reader
+     is looking at. */
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* dvh rather than vh: iOS Safari's URL bar makes vh taller than the visible
+   viewport, which pushes the footer off-screen on short pages. */
+.mn-shell {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100dvh;
+}
+
+/* Display type wants tighter tracking than body copy. */
+.mn-display {
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  /* min - preferred - max, so the headline scales without a media query. */
+  font-size: clamp(2.25rem, 1.4rem + 3.4vw, 3.75rem);
+  line-height: 1.08;
+}
+
+/* --- Navbar ------------------------------------------------------------- */
+
+.mn-nav {
+  background-color: color-mix(in srgb, var(--mn-bg) 85%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--mn-border);
+}
+
+.mn-nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.mn-nav__mark {
+  display: grid;
+  place-items: center;
+  inline-size: 1.875rem;
+  block-size: 1.875rem;
+  border-radius: var(--mn-radius-sm);
+  background-color: var(--mn-accent);
+  color: var(--mn-accent-ink);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.mn-nav .nav-link {
+  color: var(--mn-ink-muted);
+  font-weight: 500;
+  border-radius: var(--mn-radius-sm);
+  padding-inline: 0.75rem;
+}
+
+.mn-nav .nav-link:hover {
+  color: var(--mn-ink);
+}
+
+.mn-nav .nav-link.active {
+  color: var(--mn-accent);
+  background-color: var(--mn-accent-soft);
+}
+
+/* --- Theme toggle ------------------------------------------------------- */
+
+/* The glyph states the theme it switches *to*, which is the convention for a
+   "preferences" control, and the visible label says the same thing. Only one
+   of the two is ever rendered. */
+[data-bs-theme="light"] [data-mn-theme-toggle] .mn-theme-icon-light {
+  display: inline-block;
+}
+
+[data-bs-theme="light"] [data-mn-theme-toggle] .mn-theme-icon-dark {
+  display: none;
+}
+
+[data-bs-theme="dark"] [data-mn-theme-toggle] .mn-theme-icon-light {
+  display: none;
+}
+
+[data-bs-theme="dark"] [data-mn-theme-toggle] .mn-theme-icon-dark {
+  display: inline-block;
+}
+
+/* --- Profile menu ------------------------------------------------------- */
+
+.mn-profile-toggle {
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  padding: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 650;
+  font-size: 0.875rem;
+}
+
+/* The caret has nowhere to go in a circle this small, and it pushed the letter
+   off-centre. */
+.mn-profile-toggle::after {
+  display: none;
+}
+
+.mn-profile-menu {
+  min-inline-size: 19rem;
+  padding: 0;
+  overflow: hidden;
+}
+
+.mn-profile-menu__head {
+  padding: 0.875rem 1rem;
+  background-color: var(--mn-surface-sunken);
+  border-bottom: 1px solid var(--mn-border);
+}
+
+.mn-profile-menu__body {
+  padding: 0.875rem 1rem;
+  max-block-size: 60vh;
+  overflow-y: auto;
+}
+
+.mn-profile-menu__bio {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--mn-ink-muted);
+  /* User-supplied and unbounded: cap it and let it scroll rather than let one
+     paragraph make the dropdown taller than the screen. */
+  max-block-size: 7rem;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+}
+
+/* --- Hero --------------------------------------------------------------- */
+
+.mn-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--mn-radius-lg);
+  border: 1px solid var(--mn-border);
+  background:
+    radial-gradient(120% 140% at 8% 0%, var(--mn-accent-soft) 0%, transparent 55%),
+    var(--mn-surface);
+  padding: clamp(2.5rem, 1.5rem + 4vw, 5rem) clamp(1.25rem, 1rem + 2vw, 3.5rem);
+}
+
+.mn-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 100vmax;
+  background-color: var(--mn-accent-soft);
+  color: var(--mn-accent);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.mn-hero__lead {
+  color: var(--mn-ink-muted);
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.25rem);
+  max-inline-size: 46ch;
+}
+
+/* --- Feature / stat tiles ----------------------------------------------- */
+
+/* The stat-tile shape from the Bootstrap reference, as a component so the
+   twelve-utility version is written once. */
+.mn-tile {
+  height: 100%;
+  border: 1px solid var(--mn-border);
+  border-radius: var(--mn-radius-md);
+  background-color: var(--mn-surface);
+  box-shadow: var(--mn-shadow-sm);
+}
+
+.mn-tile__label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--mn-ink-muted);
+}
+
+.mn-tile__value {
+  font-size: 1.75rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The dot carries the category meaning alongside the label, so the tiles are
+   not distinguished by colour alone. */
+.mn-tile__dot {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 50%;
+  flex: none;
+}
+
+.mn-tile--routine .mn-tile__dot,
+.mn-note[data-category="DAILY_ROUTINE"] .mn-tile__dot {
+  background-color: var(--mn-cat-routine);
+}
+
+.mn-tile--memory .mn-tile__dot,
+.mn-note[data-category="MEMORIES"] .mn-tile__dot {
+  background-color: var(--mn-cat-memory);
+}
+
+.mn-tile--other .mn-tile__dot,
+.mn-note[data-category="SOMETHING_ELSE"] .mn-tile__dot {
+  background-color: var(--mn-cat-other);
+}
+
+.mn-tile__icon {
+  display: grid;
+  place-items: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: var(--mn-radius-sm);
+  background-color: var(--mn-accent-soft);
+  color: var(--mn-accent);
+}
+
+/* --- Notes -------------------------------------------------------------- */
+
+.mn-note {
+  border: 1px solid var(--mn-border);
+  border-radius: var(--mn-radius-md);
+  background-color: var(--mn-surface);
+  box-shadow: var(--mn-shadow-sm);
+  /* A 3px accent rail down the edge, coloured per category. */
+  border-inline-start: 3px solid var(--mn-border-strong);
+  transition: box-shadow var(--mn-transition), transform var(--mn-transition);
+}
+
+.mn-note:hover {
+  box-shadow: var(--mn-shadow-md);
+  transform: translateY(-2px);
+}
+
+.mn-note[data-category="DAILY_ROUTINE"] {
+  border-inline-start-color: var(--mn-cat-routine);
+}
+
+.mn-note[data-category="MEMORIES"] {
+  border-inline-start-color: var(--mn-cat-memory);
+}
+
+.mn-note[data-category="SOMETHING_ELSE"] {
+  border-inline-start-color: var(--mn-cat-other);
+}
+
+/* The badge repeats the rail's colour so the category reads without relying on
+   either colour alone - the label is always present. */
+.mn-note__badge {
+  background-color: var(--mn-surface-sunken);
+  color: var(--mn-ink-muted);
+  font-weight: 600;
+}
+
+.mn-note[data-category="DAILY_ROUTINE"] .mn-note__badge {
+  background-color: var(--mn-cat-routine-soft);
+  color: var(--mn-cat-routine);
+}
+
+.mn-note[data-category="MEMORIES"] .mn-note__badge {
+  background-color: var(--mn-cat-memory-soft);
+  color: var(--mn-cat-memory);
+}
+
+.mn-note[data-category="SOMETHING_ELSE"] .mn-note__badge {
+  background-color: var(--mn-cat-other-soft);
+  color: var(--mn-cat-other);
+}
+
+.mn-note__message {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  /* Long notes scroll inside the card rather than stretching the whole grid
+     row, which would leave one card towering over its neighbours. */
+  max-block-size: 16rem;
+  overflow-y: auto;
+  /* Long unbroken strings are the case that makes a card overflow its column. */
+  min-inline-size: 0;
+}
+
+.mn-note__meta {
+  font-size: 0.8125rem;
+  color: var(--mn-ink-muted);
+}
+
+/* htmx swaps a card in and out of the DOM; a short fade tells the reader
+   something changed where it happened. */
+.mn-swap-fade {
+  animation: mn-swap-in var(--mn-transition) ease-out;
+}
+
+@keyframes mn-swap-in {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --- Empty state -------------------------------------------------------- */
+
+.mn-empty {
+  border: 1px dashed var(--mn-border-strong);
+  border-radius: var(--mn-radius-lg);
+  background-color: color-mix(in srgb, var(--mn-surface) 60%, transparent);
+}
+
+/* --- Auth pages --------------------------------------------------------- */
+
+.mn-auth {
+  inline-size: min(100%, 27rem);
+}
+
+.mn-auth__aside {
+  background:
+    radial-gradient(120% 120% at 100% 0%, var(--mn-accent-soft) 0%, transparent 60%),
+    var(--mn-surface);
+}
+
+/* --- Footer ------------------------------------------------------------- */
+
+.mn-footer {
+  border-top: 1px solid var(--mn-border);
+  background-color: var(--mn-surface-sunken);
+  color: var(--mn-ink-muted);
+  font-size: 0.875rem;
+}
+
+/* --- Buttons ------------------------------------------------------------ */
+
+/* Bootstrap's tap target is 38px; 40px is the comfortable minimum on touch. */
+.btn {
+  --bs-btn-padding-y: 0.5rem;
+  --bs-btn-padding-x: 1rem;
+  --bs-btn-font-weight: 550;
+  --bs-btn-border-radius: var(--mn-radius-sm);
+  letter-spacing: -0.01em;
+  transition: background-color var(--mn-transition), border-color var(--mn-transition),
+    color var(--mn-transition), box-shadow var(--mn-transition), transform var(--mn-transition);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* --- Forms -------------------------------------------------------------- */
+
+.form-control,
+.form-select {
+  background-color: var(--mn-surface);
+  border-color: var(--mn-border-strong);
+  padding-block: 0.5rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--mn-surface);
+  border-color: var(--mn-accent);
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--mn-accent) 20%, transparent);
+}
+
+.form-label {
+  font-weight: 550;
+  font-size: 0.9375rem;
+}
+
+.form-text {
+  color: var(--mn-ink-muted);
+}
+
+/* --- Modal -------------------------------------------------------------- */
+
+.modal-content {
+  background-color: var(--mn-surface);
+  border: 1px solid var(--mn-border);
+  border-radius: var(--mn-radius-lg);
+  box-shadow: var(--mn-shadow-lg);
+}
+
+.modal-header,
+.modal-footer {
+  border-color: var(--mn-border);
+}
+
+/* --- Alerts ------------------------------------------------------------- */
+
+.alert {
+  border: 1px solid var(--mn-border);
+  border-radius: var(--mn-radius-md);
+}
+
+/* --- Motion ------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-note,
+  .btn {
+    transition: none;
+  }
+
+  .mn-note:hover {
+    transform: none;
+  }
+
+  .mn-swap-fade {
+    animation: none;
+  }
+
+  /* Scroll-driven behaviour is not animation, so it stays. */
+  html {
+    scroll-behavior: auto;
+  }
+}
